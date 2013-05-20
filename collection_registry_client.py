@@ -1,5 +1,3 @@
-import json
-
 import sys, os
 sys.path.insert(0,  os.path.abspath('./python-tastypie-client'))
 
