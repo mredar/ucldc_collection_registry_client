@@ -1,6 +1,8 @@
 #library used but not tracked in this repo
 python-tastypie-client/*
 
+*~ #vim files
+
 ##Boiler plate github python ignore
 *.py[cod]
 
