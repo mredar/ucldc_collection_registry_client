@@ -39,4 +39,7 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
->>>>>>> e92ba1f2464a69b915f52b2ff1066dd37af3d901
+
+#temp stuff
+queues
+test.db
