@@ -1,3 +1,4 @@
+import json
 import tastypie_client
 from ucldc_queue import UCLDC_Queue
 
@@ -29,7 +30,10 @@ for obj in provenancialcollection:
     #add a message to appropriate queue
     if obj.fields['url_oai'] != '':
         #TODO: Use json to serialize dict
-        msg = obj.fields['url_oai'] + '|' + obj.fields['oai_set_spec']
+        msg_dict = { 'url': obj.fields['url_oai'],
+                'set_spec': obj.fields['oai_set_spec']
+                }
+        msg = json.dumps(msg_dict)
         print "PUTTING MSG ON OAI Q:", msg
         q_oai.put(msg)
     if obj.fields['url_oac'] != '':
