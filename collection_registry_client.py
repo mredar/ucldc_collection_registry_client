@@ -1,39 +1,37 @@
-import sys, os
-sys.path.insert(0,  os.path.abspath('./python-tastypie-client'))
-
 import tastypie_client
+from ucldc_queue import UCLDC_Queue
 
 url_root = "http://vorol-dev.cdlib.org/"
-path_collection_registry = "collection_registry/api/v1"
+url_root = "http://127.0.0.1:8000/"
+path_collection_registry = "api/v1"
 url_api = url_root+path_collection_registry
-
-entrypoint_entrypoint_key = "list_entrypoint"
-entrypoint_schema_key = "schema"
 collection_name = "provenancialcollection"
 
 tp = tastypie_client.Api(url_api)
 provenancialcollection = None
 for c in tp.collections:
-    #print c, dir(c), c.url
     try:
-        c.url.index(collection_name)
+        c.url.index(collection_name) #this throws if name not found
         provenancialcollection = c
     except:
         pass
 
 print provenancialcollection.url 
-#print type(provenancialcollection)
-#print dir(provenancialcollection)
-import time;time.sleep(5)
+
+#queue for OAI
+q_oai = UCLDC_Queue(name="OAI_harvest")
+q_oac = UCLDC_Queue(name="OAC_harvest")
 
 obj_list = []
-for obj in provenancialcollection:#.next():
-    #print "OBJ?", obj.fields
-    if obj.fields['url_local']:
-        print obj.fields['resource_uri'], obj.fields['url_local']
-    obj_list.append(obj)
-print "LENGTH:::", len(obj_list)
-print "COLLECTION:"#, dir(provenancialcollection)
-print provenancialcollection.meta
-print obj.fields
-#import code;code.interact(local=locals())
+for obj in provenancialcollection:
+    #Currently we only know how to harvest OAI type collections
+    #right now, we key off of which fields are found in the object
+    #add a message to appropriate queue
+    if obj.fields['url_oai'] != '':
+        #TODO: Use json to serialize dict
+        msg = obj.fields['url_oai'] + '|' + obj.fields['oai_set_spec']
+        print "PUTTING MSG ON OAI Q:", msg
+        q_oai.put(msg)
+    if obj.fields['url_oac'] != '':
+        msg = obj.fields['url_oac']
+        q_oac.put(msg)
