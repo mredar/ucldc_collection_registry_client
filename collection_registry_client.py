@@ -31,7 +31,8 @@ for obj in provenancialcollection:
     if obj.fields['url_oai'] != '':
         #TODO: Use json to serialize dict
         msg_dict = { 'url': obj.fields['url_oai'],
-                'set_spec': obj.fields['oai_set_spec']
+                'set_spec': obj.fields['oai_set_spec'],
+                'campus': obj.fields['campus']
                 }
         msg = json.dumps(msg_dict)
         print "PUTTING MSG ON OAI Q:", msg
