@@ -1,6 +1,9 @@
+import os
 import json
 import tastypie_client
-from ucldc_queue import UCLDC_Queue
+import boto.sqs
+
+QUEUE_OAI_HARVEST = os.environ.get('QUEUE_OAI_HARVEST', 'OAI_harvest')
 
 url_root = "http://vorol-dev.cdlib.org/"
 url_root = "http://127.0.0.1:8000/"
@@ -20,8 +23,8 @@ for c in tp.collections:
 print provenancialcollection.url 
 
 #queue for OAI
-q_oai = UCLDC_Queue(name="OAI_harvest")
-q_oac = UCLDC_Queue(name="OAC_harvest")
+conn=boto.sqs.connect_to_region('us-east-1')
+q_oai = conn.get_queue(QUEUE_OAI_HARVEST)
 
 obj_list = []
 for obj in provenancialcollection:
@@ -36,7 +39,6 @@ for obj in provenancialcollection:
                 }
         msg = json.dumps(msg_dict)
         print "PUTTING MSG ON OAI Q:", msg
-        q_oai.put(msg)
-    if obj.fields['url_oac'] != '':
-        msg = obj.fields['url_oac']
-        q_oac.put(msg)
+        q_msg = boto.sqs.message.Message()
+        q_msg.set_body(msg)
+        status = q_oai.write(q_msg)
