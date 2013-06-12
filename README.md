@@ -1,6 +1,8 @@
 ucldc_collection_registry_client
 ================================
 
+Client for driving harvesting of the collection registry collections. This is a manager for creating jobs in the various processing queues for the UCLDC.
+
 # License 
 
 Copyright © 2013, Regents of the University of California
