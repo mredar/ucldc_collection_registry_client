@@ -5,6 +5,7 @@ Client for driving harvesting of the collection registry collections.
 
 This is a manager for creating jobs in the various processing queues for the UCLDC.
 
+TODO: This might be good to fold into avram, make testing easier and is totally dependent on it.
 # License 
 
 Copyright © 2013, Regents of the University of California
