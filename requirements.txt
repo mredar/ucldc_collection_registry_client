@@ -1,0 +1,2 @@
+boto
+git+https://github.com/mredar/python-tastypie-client.git#egg=tastypie_client
